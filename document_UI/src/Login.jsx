@@ -1,4 +1,3 @@
-// Login.jsx
 import React, { useState } from 'react';
 
 const mockUsers = {
@@ -11,14 +10,13 @@ export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // NEW
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true); // Show spinner
+    setLoading(true);
 
-    // Simulate API delay
     setTimeout(() => {
       const creds = mockUsers[role];
       if (email === creds.email && password === creds.password) {
@@ -26,15 +24,14 @@ export default function Login({ onLogin }) {
       } else {
         setError('Invalid credentials');
       }
-      setLoading(false); // Hide spinner
-    }, 1500); // simulate network delay
+      setLoading(false);
+    }, 1500);
   };
 
   return (
     <div
       style={{
-        background: '#1a1a1a',
-        color: '#fff',
+        background: '#021146', // Dark Blue
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',
@@ -44,59 +41,76 @@ export default function Login({ onLogin }) {
       <form
         onSubmit={handleLogin}
         style={{
-          background: '#2c2c36',
-          padding: '30px',
-          borderRadius: '10px',
-          width: '300px',
+          background: '#ffffff',
+          padding: '40px',
+          borderRadius: '20px',
+          width: '320px',
           textAlign: 'center',
+          boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
         }}
       >
+        {/* Hexaware Logo */}
         <img
-          src="/login-anime.gif"
-          alt="Login Logo"
+          src="/hexaware-logo.jpeg"
+          alt="Hexaware Logo"
           style={{
-            width: '80px',
-            height: '80px',
+            width: '140px',
             marginBottom: '20px',
-            borderRadius: '50%',
-            objectFit: 'cover',
           }}
         />
 
-        <h2 style={{ marginBottom: '20px' }}>Login</h2>
+        <h2 style={{ marginBottom: '20px', color: '#000' }}>Login</h2>
 
-        <label style={{ float: 'left' }}>Role:</label>
+        <label style={{ float: 'left', color: '#000' }}>Role:</label>
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          style={{ width: '100%', marginBottom: '10px' }}
+          style={{
+            width: '100%',
+            marginBottom: '15px',
+            padding: '10px',
+            borderRadius: '10px',
+            border: '1px solid #ccc',
+          }}
           disabled={loading}
         >
           <option value="Operator">Operator</option>
           <option value="Admin">Admin</option>
         </select>
 
-        <label style={{ float: 'left' }}>Email:</label>
+        <label style={{ float: 'left', color: '#000' }}>Email:</label>
         <input
           type="email"
           value={email}
           required
           onChange={(e) => setEmail(e.target.value)}
-          style={{ width: '100%', marginBottom: '10px' }}
+          style={{
+            width: '100%',
+            marginBottom: '15px',
+            padding: '10px',
+            borderRadius: '10px',
+            border: '1px solid #ccc',
+          }}
           disabled={loading}
         />
 
-        <label style={{ float: 'left' }}>Password:</label>
+        <label style={{ float: 'left', color: '#000' }}>Password:</label>
         <input
           type="password"
           value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
-          style={{ width: '100%', marginBottom: '10px' }}
+          style={{
+            width: '100%',
+            marginBottom: '15px',
+            padding: '10px',
+            borderRadius: '10px',
+            border: '1px solid #ccc',
+          }}
           disabled={loading}
         />
 
-        {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+        {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
 
         <button
           type="submit"
@@ -107,36 +121,15 @@ export default function Login({ onLogin }) {
             color: '#fff',
             padding: '10px',
             border: 'none',
-            borderRadius: '4px',
-            marginTop: '10px',
-            position: 'relative',
+            borderRadius: '10px',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? (
-            <div className="spinner" />
-          ) : (
-            'Login'
-          )}
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-
-      {/* Spinner style */}
-      <style>{`
-        .spinner {
-          width: 20px;
-          height: 20px;
-          border: 3px solid #ffffff;
-          border-top: 3px solid transparent;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-          margin: auto;
-        }
-
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }
