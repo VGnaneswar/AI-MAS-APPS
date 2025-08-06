@@ -1,57 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const UserManagementModal = () => {
-  const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState({ email: '', role: 'Operator' });
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('Operator');
+  const [users, setUsers] = useState([
+    { email: 'operator@example.com', role: 'Operator' },
+    { email: 'admin@example.com', role: 'Admin' },
+  ]);
 
-  // 🔁 Simulate API call to fetch users
-  useEffect(() => {
-    // Mock data fetch
-    const fetchUsers = async () => {
-      // In future: const response = await fetch('/api/users');
-      const dummyUsers = [
-        { email: 'operator@example.com', role: 'Operator' },
-        { email: 'admin@example.com', role: 'Admin' },
-      ];
-      setUsers(dummyUsers);
-    };
-    fetchUsers();
-  }, []);
-
-  // ➕ Add user (simulated)
   const handleAddUser = () => {
-    if (!newUser.email.trim()) return;
-    setUsers([...users, newUser]);
-    setNewUser({ email: '', role: 'Operator' });
-    // In future: await fetch('/api/users', { method: 'POST', body: JSON.stringify(newUser) })
+    if (email.trim() === '') return;
+    setUsers([...users, { email, role }]);
+    setEmail('');
+    setRole('Operator');
   };
 
   return (
-    <div style={{ background: '#333', color: 'white', padding: '1.5rem', marginTop: '2rem', borderRadius: '8px' }}>
-      <h2>User Access Management</h2>
+    <div
+      style={{
+        backgroundColor: '#1a1a1a',
+        borderRadius: '10px',
+        padding: '20px',
+        marginTop: '30px',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4)'
+      }}
+    >
+      <h2 style={{ color: '#fff', marginBottom: '15px' }}>
+        User Access Management
+      </h2>
 
-      <div style={{ marginBottom: '1rem' }}>
+      {/* Input Row */}
+      <div style={{ display: 'flex', marginBottom: '20px' }}>
         <input
-          type="email"
+          type="text"
           placeholder="Email"
-          value={newUser.email}
-          onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-          style={{ padding: '0.5rem', marginRight: '1rem' }}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{
+            padding: '10px',
+            width: '250px', // Reduced width
+            borderRadius: '10px',
+            border: 'none',
+            marginRight: '10px',
+            outline: 'none'
+          }}
         />
+
         <select
-          value={newUser.role}
-          onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-          style={{ padding: '0.5rem', marginRight: '1rem' }}
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          style={{
+            padding: '10px',
+            borderRadius: '10px',
+            border: 'none',
+            marginRight: '10px',
+            outline: 'none'
+          }}
         >
           <option value="Operator">Operator</option>
           <option value="Admin">Admin</option>
         </select>
-        <button onClick={handleAddUser} style={{ padding: '0.5rem 1.2rem' }}>Add User</button>
+
+        <button
+          onClick={handleAddUser}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#409eff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer'
+          }}
+        >
+          Add User
+        </button>
       </div>
 
-      <ul>
-        {users.map((user, idx) => (
-          <li key={idx} style={{ margin: '0.5rem 0' }}>
+      {/* User List */}
+      <ul style={{ listStyleType: 'disc', color: '#fff', paddingLeft: '20px' }}>
+        {users.map((user, index) => (
+          <li key={index} style={{ marginBottom: '6px' }}>
             {user.email} — <strong>{user.role}</strong>
           </li>
         ))}
