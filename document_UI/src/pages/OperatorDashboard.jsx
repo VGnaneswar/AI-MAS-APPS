@@ -9,6 +9,7 @@ export default function OperatorDashboard({ user, onLogout }) {
   const [documents, setDocuments] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
+  const [routedDocs, setRoutedDocs] = useState([]);
 
   const dashboardRef = useRef(null);
   const uploadsRef = useRef(null);
@@ -82,6 +83,11 @@ export default function OperatorDashboard({ user, onLogout }) {
       )
     );
 
+    const index = documents.findIndex((d) => d.name === doc.name);
+    if (index !== -1) {
+      setRoutedDocs((prev) => [...prev, index]);
+    }
+
     setSelectedDoc(null);
     setToastMessage(`✅ Document routed to ${department}!`);
     setTimeout(() => setToastMessage(''), 3000);
@@ -116,7 +122,7 @@ export default function OperatorDashboard({ user, onLogout }) {
       <DashboardLayout role="Operator">
         {/* Welcome */}
         <div ref={dashboardRef} id="dashboard" style={{ paddingTop: '0' }}>
-          <h2 style={{ color: 'white' }}>Welcome Operator</h2>
+          <h2 style={{ color: 'white' }}>Welcome Operator: {user.email}</h2>
         </div>
 
         {/* Upload + Mailbox */}
@@ -133,12 +139,12 @@ export default function OperatorDashboard({ user, onLogout }) {
             width: '100%',
           }}
         >
-          <div style={{ flex: '1 1 48%' , marginTop: '20px' }}>
+          <div style={{ flex: '1 1 48%', marginTop: '20px' }}>
             <FileUpload onUpload={handleUpload} />
           </div>
 
           <div style={{ flex: '1 1 48%' }}>
-            <MailboxIntegration />
+            <MailboxIntegration setDocuments={setDocuments} />
           </div>
         </div>
 
@@ -148,10 +154,14 @@ export default function OperatorDashboard({ user, onLogout }) {
           id="document-table"
           style={{
             marginTop: '32px',
-            clear: 'both', // ensures it doesn't get overlapped
+            clear: 'both',
           }}
         >
-          <DocumentTable documents={documents} onManualRoute={handleManualRoute} />
+          <DocumentTable
+            documents={documents}
+            onManualRoute={handleManualRoute}
+            routedDocs={routedDocs}
+          />
         </div>
       </DashboardLayout>
 
