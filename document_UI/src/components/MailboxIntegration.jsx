@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { initGmailClient, signInWithGmail, listGmailMessages } from '../utils/GmailAuth';
 
-export default function MailboxIntegration() {
-  const handleSyncMailbox = () => {
-    alert('📬 Mailbox synced! (Simulated)');
-    // TODO: Replace with actual Gmail or backend sync call
+export default function MailboxIntegration({ setDocuments }) {
+  useEffect(() => {
+    initGmailClient(); // Initialize Gmail API
+  }, []);
+
+  const handleSyncMailbox = async () => {
+    try {
+      await signInWithGmail(); // Opens Google Sign-In popup
+      const messages = await listGmailMessages(); // Fetch messages
+
+      // Simulated mapping to documents
+      const fetchedDocs = messages.map((msg, index) => ({
+        name: `Email Document ${index + 1}`,
+        type: 'Unknown',
+        confidence: Math.random(),
+        status: 'Extracted',
+        lastUpdated: new Date().toLocaleTimeString(),
+      }));
+
+      setDocuments((prev) => [...prev, ...fetchedDocs]);
+    } catch (error) {
+      console.error('Gmail sync failed:', error);
+    }
   };
 
   return (
