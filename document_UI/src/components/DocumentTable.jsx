@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 
-export default function DocumentTable({ documents, onRouteClick }) {
+export default function DocumentTable({ documents, onManualRoute, routedDocs }) {
   const [expandedRows, setExpandedRows] = useState([]);
-  const [routedDocs, setRoutedDocs] = useState([]);
 
   const toggleRow = (index) => {
     if (expandedRows.includes(index)) {
@@ -30,14 +29,11 @@ export default function DocumentTable({ documents, onRouteClick }) {
       return { ...baseStyle, backgroundColor: '#5c6bc0' };
     } else if (status === 'Manual Routing Required') {
       return { ...baseStyle, backgroundColor: '#ff9800' };
+    } else if (status?.startsWith('Routed to')) {
+      return { ...baseStyle, backgroundColor: '#29b6f6' };
     } else {
       return { ...baseStyle, backgroundColor: '#7a7a7a' };
     }
-  };
-
-  const handleRouteClick = (docIndex) => {
-    onRouteClick(docIndex);
-    setRoutedDocs([...routedDocs, docIndex]);
   };
 
   return (
@@ -73,9 +69,9 @@ export default function DocumentTable({ documents, onRouteClick }) {
                 <td>{doc.confidence ? `${(doc.confidence * 100).toFixed(2)}%` : '—'}</td>
                 <td>{doc.lastUpdated}</td>
                 <td>
-                  {routedDocs.includes(idx) ? (
+                  {routedDocs?.includes(idx) ? (
                     <CheckCircle color="#00c471" size={20} />
-                  ) : (
+                  ) : doc.needsManualRouting ? (
                     <button
                       style={{
                         backgroundColor: '#f4a949',
@@ -87,12 +83,14 @@ export default function DocumentTable({ documents, onRouteClick }) {
                         fontWeight: 'bold',
                       }}
                       onClick={(e) => {
-                        e.stopPropagation(); // prevent row toggle
-                        handleRouteClick(idx);
+                        e.stopPropagation();
+                        onManualRoute(doc);
                       }}
                     >
                       Route
                     </button>
+                  ) : (
+                    <span style={{ color: '#888' }}>—</span>
                   )}
                 </td>
               </tr>
