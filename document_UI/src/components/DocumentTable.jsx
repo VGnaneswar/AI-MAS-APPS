@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 
-export default function DocumentTable({ documents, onManualRoute, routedDocs }) {
+export default function DocumentTable({ documents, onManualRoute }) {
   const [expandedRows, setExpandedRows] = useState([]);
 
   const toggleRow = (index) => {
@@ -69,7 +69,8 @@ export default function DocumentTable({ documents, onManualRoute, routedDocs }) 
                 <td>{doc.confidence ? `${(doc.confidence * 100).toFixed(2)}%` : '—'}</td>
                 <td>{doc.lastUpdated}</td>
                 <td>
-                  {routedDocs?.includes(idx) ? (
+                  {/* ✅ FIX: Always show tick when status starts with 'Routed to' */}
+                  {doc.status?.startsWith('Routed to') ? (
                     <CheckCircle color="#00c471" size={20} />
                   ) : doc.needsManualRouting ? (
                     <button
